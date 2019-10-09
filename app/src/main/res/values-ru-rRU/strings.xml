@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Обзор фильмов</string>
+    <string name="poster_of_movie">Постер к фильму</string>
+    <string name="text_popular">Самые популярные</string>
+    <string name="text_top_rated">Наиболее рейтинговые</string>
+    <string name="txt_title_name">Название</string>
+    <string name="lbl_original_title">Оригинал</string>
+    <string name="img_big_poster">Большой постер фильма</string>
+    <string name="txt_lbl_rate">Рейтинг</string>
+    <string name="lbl_release_date">Дата релиза</string>
+    <string name="lbl_dsc">Описание:</string>
+    <string name="msg_added">Добавлено в избранное</string>
+    <string name="msg_removed">Удалено из избранного</string>
+    <string name="menu_favour">Избранное</string>
+    <string name="menu_main">Главная</string>
+    <string name="img_play">Запустить трейлер</string>
+    <string name="add_to_favourite">Добавить в избранное</string>
+</resources>

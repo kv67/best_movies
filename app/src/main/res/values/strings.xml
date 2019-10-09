@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="poster_of_movie">Poster of movie</string>
+    <string name="text_popular">Popular</string>
+    <string name="text_top_rated">Top rated</string>
+    <string name="txt_title_name">Title</string>
+    <string name="lbl_original_title">Original title</string>
+    <string name="img_big_poster">Big poster of movie</string>
+    <string name="txt_lbl_rate">Rating</string>
+    <string name="lbl_release_date">Release date</string>
+    <string name="lbl_dsc">Description:</string>
+    <string name="msg_removed">Removed from favourite</string>
+    <string name="msg_added">Added to favourite</string>
+    <string name="menu_main">Main</string>
+    <string name="menu_favour">Favourite</string>
+    <string name="img_play">Start trailer</string>
+    <string name="add_to_favourite">Add to favourite</string>
+</resources>
