@@ -3,7 +3,7 @@
     <string name="app_name">Обзор фильмов</string>
     <string name="poster_of_movie">Постер к фильму</string>
     <string name="text_popular">Самые популярные</string>
-    <string name="text_top_rated">Наиболее рейтинговые</string>
+    <string name="text_top_rated">Рейтинговые</string>
     <string name="txt_title_name">Название</string>
     <string name="lbl_original_title">Оригинал</string>
     <string name="img_big_poster">Большой постер фильма</string>
@@ -16,4 +16,5 @@
     <string name="menu_main">Главная</string>
     <string name="img_play">Запустить трейлер</string>
     <string name="add_to_favourite">Добавить в избранное</string>
+    <string name="lbl_cast">Исполнители</string>
 </resources>

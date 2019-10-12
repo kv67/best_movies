@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,21 +35,7 @@ import kve.ru.bestmovies.utils.NetworkUtils;
 
 public class DetailActivity extends AppCompatActivity {
 
-  private ImageView imageViewBigPoster;
   private ImageView imageViewAddToFavour;
-  private TextView textViewTitle;
-  private TextView textViewOriginalTitle;
-  private TextView textViewRate;
-  private TextView textViewReleaseDate;
-  private TextView textViewOverview;
-  private ScrollView scrollViewInfo;
-
-  RecyclerView recyclerViewTrailers;
-  RecyclerView recyclerViewReviews;
-  ReviewAdapter reviewAdapter;
-  TrailerAdapter trailerAdapter;
-
-
   private int id;
   private MainViewModel viewModel;
   private Movie movie;
@@ -65,16 +50,17 @@ public class DetailActivity extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
+    int itemId = item.getItemId();
     Intent intent = null;
-    switch (id){
+    switch (itemId){
       case R.id.menuMain:
         intent = new Intent(this, MainActivity.class);
         break;
       case R.id.menuFavourite:
         intent = new Intent(this, FavouriteActivity.class);
-
         break;
+        default:
+          break;
     }
     if (intent != null){
       startActivity(intent);
@@ -87,14 +73,15 @@ public class DetailActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_detail);
 
-    imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
+    ImageView imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
     imageViewAddToFavour = findViewById(R.id.imageViewAddToFavour);
-    textViewTitle = findViewById(R.id.textViewTitle);
-    textViewOriginalTitle = findViewById(R.id.textViewOriginalTitle);
-    textViewRate = findViewById(R.id.textViewRate);
-    textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
-    textViewOverview = findViewById(R.id.textViewOverview);
-    scrollViewInfo = findViewById(R.id.scrollViewInfo);
+    TextView textViewTitle = findViewById(R.id.textViewTitle);
+    TextView textViewOriginalTitle = findViewById(R.id.textViewOriginalTitle);
+    TextView textViewRate = findViewById(R.id.textViewRate);
+    TextView textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
+    TextView textViewOverview = findViewById(R.id.textViewOverview);
+    TextView textViewCast = findViewById(R.id.textViewCast);
+    ScrollView scrollViewInfo = findViewById(R.id.scrollViewInfo);
 
     viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
@@ -119,16 +106,14 @@ public class DetailActivity extends AppCompatActivity {
 
     setFavourite();
 
-    recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
-    recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
-    reviewAdapter = new ReviewAdapter();
-    trailerAdapter = new TrailerAdapter();
-    trailerAdapter.setListener(new TrailerAdapter.OnTrailerClickListener() {
-      @Override
-      public void onTrailerClick(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(intent);
-      }
+    RecyclerView recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
+    RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
+
+    ReviewAdapter reviewAdapter = new ReviewAdapter();
+    TrailerAdapter trailerAdapter = new TrailerAdapter();
+    trailerAdapter.setListener(url -> {
+      Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+      startActivity(intent1);
     });
 
     recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
@@ -142,6 +127,9 @@ public class DetailActivity extends AppCompatActivity {
     List<Review> reviews = JSONUtils.getReviewsFromJSON(jsonReviews);
     trailerAdapter.setTrailers(trailers);
     reviewAdapter.setReviews(reviews);
+
+    JSONObject jsonCredits = NetworkUtils.getJSONForCredits(movie.getId());
+    textViewCast.setText(JSONUtils.getCastFromJSON(jsonCredits));
 
     scrollViewInfo.smoothScrollTo(0, 0);
   }

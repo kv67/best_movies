@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,9 +25,12 @@ import kve.ru.bestmovies.MainActivity;
 
 public class NetworkUtils {
 
+  private static final String TAG = "NetworkUtils";
+
   private static final String BASIC_URL = "https://api.themoviedb.org/3/discover/movie";
   private static final String BASIC_URL_VIDEOS = "https://api.themoviedb.org/3/movie/%s/videos";
   private static final String BASIC_URL_REVIEWS = "https://api.themoviedb.org/3/movie/%s/reviews";
+  private static final String BASIC_URL_CAST = "https://api.themoviedb.org/3/movie/%s/credits";
 
   private static final String PARAMS_API_KEY = "api_key";
   private static final String PARAMS_LANGUAGE = "language";
@@ -42,6 +46,22 @@ public class NetworkUtils {
   public static final int POPULARITY = 0;
   public static final int TOP_RATED = 1;
 
+  private NetworkUtils() {
+     throw new IllegalStateException("Utility class");
+  }
+
+  public static URL buildURLToCredits(int id){
+    Uri uri = Uri.parse(String.format(BASIC_URL_CAST, id)).buildUpon()
+        .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+        .build();
+    try {
+      return new URL(uri.toString());
+    } catch (MalformedURLException e) {
+      Log.i(TAG, e.getLocalizedMessage());
+    }
+    return null;
+  }
+
   public static URL buildURLToVideos(int id){
     Uri uri = Uri.parse(String.format(BASIC_URL_VIDEOS, id)).buildUpon()
         .appendQueryParameter(PARAMS_API_KEY, API_KEY)
@@ -50,7 +70,7 @@ public class NetworkUtils {
     try {
       return new URL(uri.toString());
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
     }
     return null;
   }
@@ -63,7 +83,7 @@ public class NetworkUtils {
     try {
       return new URL(uri.toString());
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
     }
     return null;
   }
@@ -87,7 +107,22 @@ public class NetworkUtils {
     try {
       result = new URL(uri.toString());
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
+    }
+
+    return result;
+  }
+
+  public static JSONObject getJSONForCredits(int id){
+    JSONObject result = null;
+    URL url = buildURLToCredits(id);
+    try {
+      result = new JSONLoadTask().execute(url).get();
+    } catch (ExecutionException e) {
+      Log.i(TAG, e.getLocalizedMessage());
+    } catch (InterruptedException e) {
+      Log.i(TAG, e.getLocalizedMessage());
+      Thread.currentThread().interrupt();
     }
 
     return result;
@@ -99,9 +134,10 @@ public class NetworkUtils {
     try {
       result = new JSONLoadTask().execute(url).get();
     } catch (ExecutionException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
+      Thread.currentThread().interrupt();
     }
 
     return result;
@@ -113,9 +149,10 @@ public class NetworkUtils {
     try {
       result = new JSONLoadTask().execute(url).get();
     } catch (ExecutionException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
+      Thread.currentThread().interrupt();
     }
 
     return result;
@@ -127,9 +164,10 @@ public class NetworkUtils {
     try {
       result = new JSONLoadTask().execute(url).get();
     } catch (ExecutionException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
+      Thread.currentThread().interrupt();
     }
 
     return result;
@@ -165,46 +203,30 @@ public class NetworkUtils {
     @Nullable
     @Override
     public JSONObject loadInBackground() {
-      if (bundle == null){
-        return null;
-      }
-
-      String urlAsString = bundle.getString("url");
-      URL url = null;
-      try {
-        url = new URL(urlAsString);
-      } catch (MalformedURLException e) {
-        e.printStackTrace();
-        return null;
-      }
-
-      if (url == null) {
-        return null;
-      }
-
       JSONObject result = null;
-      HttpURLConnection connection = null;
-      try {
-        connection = (HttpURLConnection)url.openConnection();
-        BufferedReader reader = new BufferedReader(
-            new InputStreamReader(connection.getInputStream()));
-        StringBuilder builder = new StringBuilder();
-        String line = reader.readLine();
-        while (line != null){
-          builder.append(line);
-          line = reader.readLine();
-        }
-        result = new JSONObject(builder.toString());
-      } catch (IOException e) {
-        e.printStackTrace();
-      } catch (JSONException e) {
-        e.printStackTrace();
-      } finally {
-        if (connection != null){
-          connection.disconnect();
+      if (bundle != null) {
+        HttpURLConnection connection = null;
+        try {
+          connection = (HttpURLConnection) new URL( bundle.getString("url")).openConnection();
+          try (
+              BufferedReader reader = new BufferedReader(
+              new InputStreamReader(connection.getInputStream()));) {
+            StringBuilder builder = new StringBuilder();
+            String line = reader.readLine();
+            while (line != null) {
+              builder.append(line);
+              line = reader.readLine();
+            }
+            result = new JSONObject(builder.toString());
+          }
+        } catch (IOException | JSONException e) {
+           Log.i(TAG, e.getLocalizedMessage());
+        } finally {
+          if (connection != null) {
+            connection.disconnect();
+          }
         }
       }
-
       return result;
     }
   }
@@ -214,32 +236,28 @@ public class NetworkUtils {
     protected JSONObject doInBackground(URL... urls) {
       JSONObject result = null;
 
-      if (urls == null || urls.length == 0){
-        return result;
-      }
-
-      HttpURLConnection connection = null;
-      try {
-        connection = (HttpURLConnection)urls[0].openConnection();
-        BufferedReader reader = new BufferedReader(
-            new InputStreamReader(connection.getInputStream()));
-        StringBuilder builder = new StringBuilder();
-        String line = reader.readLine();
-        while (line != null){
-          builder.append(line);
-          line = reader.readLine();
-        }
-        result = new JSONObject(builder.toString());
-      } catch (IOException e) {
-        e.printStackTrace();
-      } catch (JSONException e) {
-        e.printStackTrace();
-      } finally {
-        if (connection != null){
-          connection.disconnect();
+      if (urls != null && urls.length > 0) {
+        HttpURLConnection connection = null;
+        try {
+          connection = (HttpURLConnection) urls[0].openConnection();
+          try (BufferedReader reader = new BufferedReader(
+              new InputStreamReader(connection.getInputStream()));) {
+            StringBuilder builder = new StringBuilder();
+            String line = reader.readLine();
+            while (line != null) {
+              builder.append(line);
+              line = reader.readLine();
+            }
+            result = new JSONObject(builder.toString());
+          }
+        } catch (IOException | JSONException e) {
+          Log.i(TAG, e.getLocalizedMessage());
+        } finally {
+          if (connection != null) {
+            connection.disconnect();
+          }
         }
       }
-
       return result;
     }
   }

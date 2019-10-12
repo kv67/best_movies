@@ -65,13 +65,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle"
-        app:layout_constraintBottom_toTopOf="@+id/textViewLblRate"/>
+        app:layout_constraintBottom_toTopOf="@+id/textViewLblCast"/>
 
     <View
         style="@style/VerticalBorderStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textViewOriginalTitle"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLblCast"/>
+
+    <TextView
+        android:id="@+id/textViewLblCast"
+        style="@style/LabelStyle"
+        android:layout_width="0dp"
+        android:text="@string/lbl_cast"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle" />
+
+    <TextView
+        android:id="@+id/textViewCast"
+        style="@style/ContentStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle" />
+
+    <View
+        style="@style/HorizontalBorderStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCast"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLblRate"/>
+
+    <View
+        style="@style/VerticalBorderStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewCast"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle"
         app:layout_constraintBottom_toTopOf="@+id/textViewLblRate"/>
 
     <TextView
@@ -81,14 +111,14 @@
         android:text="@string/txt_lbl_rate"
         app:layout_constraintEnd_toStartOf="@+id/guidelineCenter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewCast" />
 
     <TextView
         android:id="@+id/textViewRate"
         style="@style/ContentStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
-        app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewCast" />
 
     <View
         style="@style/HorizontalBorderStyle"

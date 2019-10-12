@@ -15,7 +15,12 @@ import kve.ru.bestmovies.data.Trailer;
 
 public class JSONUtils {
 
+  private static final String TAG = "JSONUtils";
+
   private static final String KEY_RESULTS = "results";
+
+  // Для актеров
+  private static final String KEY_CAST = "cast";
 
   // Для отзывов
   private static final String KEY_AUTHOR = "author";
@@ -42,6 +47,35 @@ public class JSONUtils {
   public static final String BIG_POSTER_SIZE = "w780";
 
 
+  private JSONUtils() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  public static String getCastFromJSON(JSONObject jsonObject){
+    String result = null;
+    if (jsonObject == null){
+      return result;
+    }
+    try {
+      JSONArray cust = jsonObject.getJSONArray(KEY_CAST);
+      StringBuilder builder = new StringBuilder();
+      for (int i = 0; i < KEY_CAST.length(); i++) {
+        String name = cust.getJSONObject(i).getString(KEY_NAME);
+        if (name != null && !name.isEmpty()) {
+          if (builder.length() == 0) {
+            builder.append(name);
+          } else {
+            builder.append(", " + name);
+          }
+        }
+      }
+      result = builder.toString();
+    } catch (JSONException e) {
+      Log.i(TAG, e.getLocalizedMessage());
+    }
+    return result;
+  }
+
   public static List<Review> getReviewsFromJSON(JSONObject jsonObject){
     List<Review> result = new ArrayList<>();
     if (jsonObject == null){
@@ -55,7 +89,7 @@ public class JSONUtils {
         result.add(review);
       }
     } catch (JSONException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
     }
     return result;
   }
@@ -74,7 +108,7 @@ public class JSONUtils {
         result.add(trailer);
       }
     } catch (JSONException e) {
-      e.printStackTrace();
+      Log.i(TAG, e.getLocalizedMessage());
     }
     return result;
   }
@@ -103,8 +137,7 @@ public class JSONUtils {
         result.add(movie);
       }
     } catch (JSONException e) {
-      e.printStackTrace();
-      Log.i("MyResult", e.getLocalizedMessage());
+      Log.i(TAG, e.getLocalizedMessage());
     }
 
     return result;
