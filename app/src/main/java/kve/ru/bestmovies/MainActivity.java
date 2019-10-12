@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     DisplayMetrics displayMetrics = new DisplayMetrics();
     getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
-    return width / 185 > 3 ? width / 185 : 3;
+    return width / 185 > 2 ? width / 185 : 2;
   }
 
   @Override
