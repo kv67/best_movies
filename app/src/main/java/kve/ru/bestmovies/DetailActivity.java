@@ -23,8 +23,10 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import kve.ru.bestmovies.adapters.CountryAdapter;
 import kve.ru.bestmovies.adapters.ReviewAdapter;
 import kve.ru.bestmovies.adapters.TrailerAdapter;
+import kve.ru.bestmovies.data.Country;
 import kve.ru.bestmovies.data.FavouriteMovie;
 import kve.ru.bestmovies.data.MainViewModel;
 import kve.ru.bestmovies.data.Movie;
@@ -108,8 +110,10 @@ public class DetailActivity extends AppCompatActivity {
 
     RecyclerView recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
     RecyclerView recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
+    RecyclerView recyclerViewCountries = findViewById(R.id.recyclerViewCountries);
 
     ReviewAdapter reviewAdapter = new ReviewAdapter();
+    CountryAdapter countryAdapter = new CountryAdapter();
     TrailerAdapter trailerAdapter = new TrailerAdapter();
     trailerAdapter.setListener(url -> {
       Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -120,13 +124,18 @@ public class DetailActivity extends AppCompatActivity {
     recyclerViewTrailers.setAdapter(trailerAdapter);
     recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
     recyclerViewReviews.setAdapter(reviewAdapter);
+    recyclerViewCountries.setLayoutManager(new LinearLayoutManager(this));
+    recyclerViewCountries.setAdapter(countryAdapter);
 
     JSONObject jsonTrailers = NetworkUtils.getJSONForVideos(movie.getId());
     JSONObject jsonReviews = NetworkUtils.getJSONForReviews(movie.getId());
+    JSONObject jsonCountries = NetworkUtils.getJSONForCountries(movie.getId());
     List<Trailer> trailers = JSONUtils.getTrailersFromJSON(jsonTrailers);
     List<Review> reviews = JSONUtils.getReviewsFromJSON(jsonReviews);
+    List<Country> countries = JSONUtils.getCountriesFromJSON(jsonCountries);
     trailerAdapter.setTrailers(trailers);
     reviewAdapter.setReviews(reviews);
+    countryAdapter.setCountries(countries);
 
     JSONObject jsonCredits = NetworkUtils.getJSONForCredits(movie.getId());
     textViewCast.setText(JSONUtils.getCastFromJSON(jsonCredits));

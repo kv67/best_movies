@@ -31,6 +31,7 @@ public class NetworkUtils {
   private static final String BASIC_URL_VIDEOS = "https://api.themoviedb.org/3/movie/%s/videos";
   private static final String BASIC_URL_REVIEWS = "https://api.themoviedb.org/3/movie/%s/reviews";
   private static final String BASIC_URL_CAST = "https://api.themoviedb.org/3/movie/%s/credits";
+  private static final String BASIC_URL_COUNTRIES = "https://api.themoviedb.org/3/movie/%s";
 
   private static final String PARAMS_API_KEY = "api_key";
   private static final String PARAMS_LANGUAGE = "language";
@@ -48,6 +49,19 @@ public class NetworkUtils {
 
   private NetworkUtils() {
      throw new IllegalStateException("Utility class");
+  }
+
+  public static URL buildURLToCountries(int id){
+    Uri uri = Uri.parse(String.format(BASIC_URL_COUNTRIES, id)).buildUpon()
+        .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+        .appendQueryParameter(PARAMS_LANGUAGE, MainActivity.getLang())
+        .build();
+    try {
+      return new URL(uri.toString());
+    } catch (MalformedURLException e) {
+      Log.i(TAG, e.getLocalizedMessage());
+    }
+    return null;
   }
 
   public static URL buildURLToCredits(int id){
@@ -108,6 +122,21 @@ public class NetworkUtils {
       result = new URL(uri.toString());
     } catch (MalformedURLException e) {
       Log.i(TAG, e.getLocalizedMessage());
+    }
+
+    return result;
+  }
+
+  public static JSONObject getJSONForCountries(int id){
+    JSONObject result = null;
+    URL url = buildURLToCountries(id);
+    try {
+      result = new JSONLoadTask().execute(url).get();
+    } catch (ExecutionException e) {
+      Log.i(TAG, e.getLocalizedMessage());
+    } catch (InterruptedException e) {
+      Log.i(TAG, e.getLocalizedMessage());
+      Thread.currentThread().interrupt();
     }
 
     return result;

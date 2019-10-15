@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import kve.ru.bestmovies.data.Country;
 import kve.ru.bestmovies.data.Movie;
 import kve.ru.bestmovies.data.Review;
 import kve.ru.bestmovies.data.Trailer;
@@ -18,6 +19,10 @@ public class JSONUtils {
   private static final String TAG = "JSONUtils";
 
   private static final String KEY_RESULTS = "results";
+
+  // Для стран
+  private static final String KEY_COUNTRIES = "production_countries";
+  private static final String KEY_ISO = "iso_3166_1";
 
   // Для актеров
   private static final String KEY_CAST = "cast";
@@ -49,6 +54,24 @@ public class JSONUtils {
 
   private JSONUtils() {
     throw new IllegalStateException("Utility class");
+  }
+
+  public static List<Country> getCountriesFromJSON(JSONObject jsonObject){
+    List<Country> result = new ArrayList<>();
+    if (jsonObject == null){
+      return result;
+    }
+    try {
+      JSONArray countries = jsonObject.getJSONArray(KEY_COUNTRIES);
+      for (int i = 0; i < countries.length(); i++) {
+        Country country = new Country(countries.getJSONObject(i).getString(KEY_NAME),
+            countries.getJSONObject(i).getString(KEY_ISO));
+        result.add(country);
+      }
+    } catch (JSONException e) {
+      Log.i(TAG, e.getLocalizedMessage());
+    }
+    return result;
   }
 
   public static String getCastFromJSON(JSONObject jsonObject){

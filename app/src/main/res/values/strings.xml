@@ -16,4 +16,5 @@
     <string name="img_play">Start trailer</string>
     <string name="add_to_favourite">Add to favourite</string>
     <string name="lbl_cast">Cast</string>
+    <string name="lbl_country">Country</string>
 </resources>

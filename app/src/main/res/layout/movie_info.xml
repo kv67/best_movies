@@ -152,11 +152,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewRate" />
 
     <View
+        android:id="@+id/view2"
         style="@style/HorizontalBorderStyle"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLblDsc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLblReleaseDate"
-        app:layout_constraintBottom_toTopOf="@+id/textViewLblDsc"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewLblReleaseDate" />
 
     <View
         style="@style/VerticalBorderStyle"
@@ -179,14 +180,38 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewTrailers"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLblCountry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewLblDsc" />
+
+    <View
+        style="@style/HorizontalBorderStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOverview"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLblCountry"/>
+
+    <TextView
+        android:id="@+id/textViewLblCountry"
+        style="@style/LabelStyle"
+        android:layout_width="0dp"
+        android:text="@string/lbl_country"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOverview" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCountries"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLblCountry" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTrailers"
@@ -195,7 +220,7 @@
         android:nestedScrollingEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewOverview" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewCountries" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewReviews"
