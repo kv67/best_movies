@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import kve.ru.bestmovies.adapters.MovieAdapter;
 import kve.ru.bestmovies.data.FavouriteMovie;
 import kve.ru.bestmovies.data.MainViewModel;
 import kve.ru.bestmovies.data.Movie;
+import kve.ru.bestmovies.pojo.BestMovie;
 
 public class FavouriteActivity extends AppCompatActivity {
 
@@ -44,7 +46,6 @@ public class FavouriteActivity extends AppCompatActivity {
         break;
       case R.id.menuFavourite:
         intent = new Intent(this, FavouriteActivity.class);
-
         break;
     }
     if (intent != null){
@@ -63,27 +64,24 @@ public class FavouriteActivity extends AppCompatActivity {
     recyclerViewFavourite = findViewById(R.id.recyclerViewFavourite);
     recyclerViewFavourite.setLayoutManager(new GridLayoutManager(this,2));
     recyclerViewFavourite.setAdapter(adapter);
-    adapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
-      @Override
-      public void onPosterClick(int position) {
-        Movie movie = adapter.getMovies().get(position);
-        Intent intent = new Intent(FavouriteActivity.this, DetailActivity.class);
-        intent.putExtra("id", movie.getId());
-        intent.putExtra("isFavourite", true);
-        startActivity(intent);
+    adapter.setOnPosterClickListener(position -> {
+      BestMovie movie = adapter.getMovies().get(position);
+      Intent intent = new Intent(FavouriteActivity.this, DetailActivity.class);
+      intent.putExtra("id", movie.getId());
+      intent.putExtra("isFavourite", true);
+      startActivity(intent);
+    });
+
+    viewModel.getFavouriteMovies().observe(this, favouriteMovies -> {
+      if (favouriteMovies != null) {
+        List<BestMovie> movies = new ArrayList<>();
+        movies.addAll(favouriteMovies);
+        for (BestMovie movie : movies){
+          Log.i("Favor", movie.getTitle());
+        }
+        adapter.setMovies(movies);
       }
     });
 
-    LiveData<List<FavouriteMovie>> moviesFromLiveData = viewModel.getFavouriteMovies();
-    moviesFromLiveData.observe(this, new Observer<List<FavouriteMovie>>() {
-      @Override
-      public void onChanged(List<FavouriteMovie> favouriteMovies) {
-        if (favouriteMovies != null) {
-          List<Movie> movies = new ArrayList<>();
-          movies.addAll(favouriteMovies);
-          adapter.setMovies(movies);
-        }
-      }
-    });
   }
 }

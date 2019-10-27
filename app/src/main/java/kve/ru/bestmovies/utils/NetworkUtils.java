@@ -39,11 +39,10 @@ public class NetworkUtils {
   private static final String PARAMS_PAGE = "page";
   private static final String PARAMS_MIN_VOTE_COUNT = "vote_count.gte";
 
-  private static final String API_KEY = "1b097d2d522fb2f73b520ed253664d65";
-  private static final String SORT_BY_POPULARITY = "popularity.desc";
-  private static final String SORT_BY_TOP_RATED = "vote_average.desc";
-  private static final String MIN_VOTE_COUNT_VALUE = "1000";
-
+  public static final String SORT_BY_POPULARITY = "popularity.desc";
+  public static final String SORT_BY_TOP_RATED = "vote_average.desc";
+  public static final String MIN_VOTE_COUNT_VALUE = "1000";
+  public static final String API_KEY = "1b097d2d522fb2f73b520ed253664d65";
   public static final int POPULARITY = 0;
   public static final int TOP_RATED = 1;
 

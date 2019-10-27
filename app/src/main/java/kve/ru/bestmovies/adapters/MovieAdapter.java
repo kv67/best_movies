@@ -15,10 +15,11 @@ import java.util.List;
 
 import kve.ru.bestmovies.R;
 import kve.ru.bestmovies.data.Movie;
+import kve.ru.bestmovies.pojo.BestMovie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-  private List<Movie> movies;
+  private List<BestMovie> movies;
   private OnPosterClickListener onPosterClickListener;
   private OnReachEndListener onReachEndListener;
 
@@ -42,16 +43,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     this.onReachEndListener = onReachEndListener;
   }
 
-  public List<Movie> getMovies() {
+  public List<BestMovie> getMovies() {
     return movies;
   }
 
-  public void setMovies(List<Movie> movies) {
+  public void setMovies(List<BestMovie> movies) {
     this.movies = movies;
     notifyDataSetChanged();
   }
 
-  public void addMovies(List<Movie> movies){
+  public void addMovies(List<BestMovie> movies){
     this.movies.addAll(movies);
     notifyDataSetChanged();
   }
@@ -74,7 +75,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     if (movies.size() >= 20 &&  position == movies.size() - 8 && onReachEndListener != null){
       onReachEndListener.onReachEnd();
     }
-    Movie movie = movies.get(position);
+    BestMovie movie = movies.get(position);
     Picasso.get().load(movie.getPosterPath()).into(holder.imageViewSmallPoster);
   }
 
@@ -90,12 +91,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public MovieViewHolder(@NonNull View itemView) {
       super(itemView);
       imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPoster);
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          if (onPosterClickListener != null){
-            onPosterClickListener.onPosterClick(getAdapterPosition());
-          }
+      itemView.setOnClickListener(v -> {
+        if (onPosterClickListener != null){
+          onPosterClickListener.onPosterClick(getAdapterPosition());
         }
       });
     }

@@ -6,7 +6,9 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Movie.class, FavouriteMovie.class}, version = 3, exportSchema = false)
+import kve.ru.bestmovies.pojo.BestMovie;
+
+@Database(entities = {BestMovie.class, FavouriteMovie.class}, version = 20, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
 
   private static final Object LOCK = new Object();

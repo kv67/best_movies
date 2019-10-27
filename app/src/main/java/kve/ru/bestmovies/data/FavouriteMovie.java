@@ -3,22 +3,31 @@ package kve.ru.bestmovies.data;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
-@Entity(tableName = "favourite_movies")
-public class FavouriteMovie extends Movie {
+import kve.ru.bestmovies.pojo.BestMovie;
 
-  public FavouriteMovie(int uniqueId, int id, int voteCount, String title, String originalTitle,
-      String overview,
-      String posterPath, String bigPosterPath, String backdropPath, double voteAverage, String releaseDate) {
-    super(uniqueId, id, voteCount, title, originalTitle, overview, posterPath, bigPosterPath,
-        backdropPath,
-        voteAverage, releaseDate);
+@Entity(tableName = "favourite_movies")
+public class FavouriteMovie extends BestMovie {
+
+  public FavouriteMovie() {
   }
 
   @Ignore
-  public FavouriteMovie(Movie movie){
-    super(movie.getUniqueId(), movie.getId(), movie.getVoteCount(), movie.getTitle(),
-        movie.getOriginalTitle(),
-        movie.getOverview(), movie.getPosterPath(), movie.getBigPosterPath(),
-        movie.getBackdropPath(), movie.getVoteAverage(), movie.getReleaseDate());
+  public FavouriteMovie(BestMovie movie){
+    super.setPopularity(movie.getPopularity());
+    super.setVoteCount(movie.getVoteCount());
+    super.setVideo(movie.getVideo());
+    super.setPosterPath(movie.getPosterPath());
+    super.setId(movie.getId());
+    super.setAdult(movie.getAdult());
+    super.setBackdropPath(movie.getBackdropPath());
+    super.setOriginalLanguage(movie.getOriginalLanguage());
+    super.setOriginalTitle(movie.getOriginalTitle());
+    super.setGenreIds(movie.getGenreIds());
+    super.setTitle(movie.getTitle());
+    super.setVoteAverage(movie.getVoteAverage());
+    super.setOverview(movie.getOverview());
+    super.setReleaseDate(movie.getReleaseDate());
+    super.setBigPosterPath(movie.getBigPosterPath());
   }
+
 }

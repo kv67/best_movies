@@ -32,6 +32,7 @@ import kve.ru.bestmovies.data.MainViewModel;
 import kve.ru.bestmovies.data.Movie;
 import kve.ru.bestmovies.data.Review;
 import kve.ru.bestmovies.data.Trailer;
+import kve.ru.bestmovies.pojo.BestMovie;
 import kve.ru.bestmovies.utils.JSONUtils;
 import kve.ru.bestmovies.utils.NetworkUtils;
 
@@ -40,7 +41,7 @@ public class DetailActivity extends AppCompatActivity {
   private ImageView imageViewAddToFavour;
   private int id;
   private MainViewModel viewModel;
-  private Movie movie;
+  private BestMovie movie;
   private FavouriteMovie favouriteMovie;
 
   @Override
@@ -99,7 +100,7 @@ public class DetailActivity extends AppCompatActivity {
       finish();
     }
 
-    Picasso.get().load(movie.getBigPosterPath()).placeholder(R.drawable.cadr).into(imageViewBigPoster);
+    Picasso.get().load(movie.getPosterPath()).placeholder(R.drawable.cadr).into(imageViewBigPoster);
     textViewTitle.setText(movie.getTitle());
     textViewOriginalTitle.setText(movie.getOriginalTitle());
     textViewRate.setText(String.valueOf(movie.getVoteAverage()));
