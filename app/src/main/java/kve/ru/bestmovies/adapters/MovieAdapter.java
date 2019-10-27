@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kve.ru.bestmovies.R;
-import kve.ru.bestmovies.data.Movie;
 import kve.ru.bestmovies.pojo.BestMovie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {

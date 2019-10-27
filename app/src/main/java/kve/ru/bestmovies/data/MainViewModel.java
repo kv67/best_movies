@@ -2,6 +2,7 @@ package kve.ru.bestmovies.data;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -23,6 +24,7 @@ import kve.ru.bestmovies.utils.NetworkUtils;
 
 public class MainViewModel extends AndroidViewModel {
 
+  private static final String LOG_TAG = "MainViewModel";
   private static MovieDatabase database;
   private LiveData<List<BestMovie>> movies;
   private LiveData<List<FavouriteMovie>> favouriteMovies;
@@ -92,9 +94,9 @@ public class MainViewModel extends AndroidViewModel {
     try {
       return new GetMovieTask().execute(id).get();
     } catch (ExecutionException e) {
-      e.printStackTrace();
+      Log.i(LOG_TAG, e.getLocalizedMessage());
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      Log.i(LOG_TAG, e.getLocalizedMessage());
       Thread.currentThread().interrupt();
     }
     return null;
@@ -104,9 +106,9 @@ public class MainViewModel extends AndroidViewModel {
     try {
       return new GetFavouriteMovieTask().execute(id).get();
     } catch (ExecutionException e) {
-      e.printStackTrace();
+      Log.i(LOG_TAG, e.getLocalizedMessage());
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      Log.i(LOG_TAG, e.getLocalizedMessage());
       Thread.currentThread().interrupt();
     }
     return null;

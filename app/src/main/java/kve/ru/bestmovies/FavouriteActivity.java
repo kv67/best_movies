@@ -1,8 +1,6 @@
 package kve.ru.bestmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,16 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kve.ru.bestmovies.adapters.MovieAdapter;
-import kve.ru.bestmovies.data.FavouriteMovie;
 import kve.ru.bestmovies.data.MainViewModel;
-import kve.ru.bestmovies.data.Movie;
 import kve.ru.bestmovies.pojo.BestMovie;
 
 public class FavouriteActivity extends AppCompatActivity {
-
-  private RecyclerView recyclerViewFavourite;
-  private MainViewModel viewModel;
-  private MovieAdapter adapter;
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,6 +39,8 @@ public class FavouriteActivity extends AppCompatActivity {
       case R.id.menuFavourite:
         intent = new Intent(this, FavouriteActivity.class);
         break;
+      default:
+        break;
     }
     if (intent != null){
       startActivity(intent);
@@ -59,9 +53,9 @@ public class FavouriteActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_favorite);
 
-    viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-    adapter = new MovieAdapter();
-    recyclerViewFavourite = findViewById(R.id.recyclerViewFavourite);
+    MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+    MovieAdapter adapter = new MovieAdapter();
+    RecyclerView recyclerViewFavourite = findViewById(R.id.recyclerViewFavourite);
     recyclerViewFavourite.setLayoutManager(new GridLayoutManager(this,2));
     recyclerViewFavourite.setAdapter(adapter);
     adapter.setOnPosterClickListener(position -> {
