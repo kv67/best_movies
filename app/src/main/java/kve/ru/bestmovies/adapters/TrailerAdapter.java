@@ -1,7 +1,5 @@
 package kve.ru.bestmovies.adapters;
 
-import android.accessibilityservice.AccessibilityService;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +8,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kve.ru.bestmovies.R;
 import kve.ru.bestmovies.data.Trailer;
+import kve.ru.bestmovies.pojo.video.VideoTrailer;
+import kve.ru.bestmovies.utils.JSONUtils;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
 
-  List<Trailer> trailers;
+  List<VideoTrailer> trailers = new ArrayList<>();
 
   private OnTrailerClickListener listener;
 
@@ -25,7 +26,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     void onTrailerClick(String url);
   }
 
-  public void setTrailers(List<Trailer> trailers) {
+  public void setTrailers(List<VideoTrailer> trailers) {
     this.trailers = trailers;
     notifyDataSetChanged();
   }
@@ -44,7 +45,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
   @Override
   public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
-    Trailer trailer = trailers.get(position);
+    VideoTrailer trailer = trailers.get(position);
     holder.textViewNameOfVideo.setText(trailer.getName());
   }
 
@@ -60,12 +61,10 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     public TrailerViewHolder(@NonNull View itemView) {
       super(itemView);
       textViewNameOfVideo = itemView.findViewById(R.id.textViewNameOfVideo);
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          if (listener != null){
-            listener.onTrailerClick(trailers.get(getAdapterPosition()).getKey());
-          }
+      itemView.setOnClickListener(v -> {
+        if (listener != null){
+          listener.onTrailerClick(JSONUtils.BASE_YOUTUBE_URL +
+              trailers.get(getAdapterPosition()).getKey());
         }
       });
     }

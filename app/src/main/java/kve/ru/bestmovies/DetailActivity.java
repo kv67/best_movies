@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,22 +20,13 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
-import java.util.List;
-
 import kve.ru.bestmovies.adapters.CountryAdapter;
 import kve.ru.bestmovies.adapters.ReviewAdapter;
 import kve.ru.bestmovies.adapters.TrailerAdapter;
-import kve.ru.bestmovies.data.Country;
 import kve.ru.bestmovies.data.FavouriteMovie;
 import kve.ru.bestmovies.data.MainViewModel;
-import kve.ru.bestmovies.data.Movie;
-import kve.ru.bestmovies.data.Review;
-import kve.ru.bestmovies.data.Trailer;
-import kve.ru.bestmovies.pojo.BestMovie;
-import kve.ru.bestmovies.utils.JSONUtils;
-import kve.ru.bestmovies.utils.NetworkUtils;
+import kve.ru.bestmovies.pojo.cast.Cast;
+import kve.ru.bestmovies.pojo.movie.BestMovie;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -128,19 +120,54 @@ public class DetailActivity extends AppCompatActivity {
     recyclerViewCountries.setLayoutManager(new LinearLayoutManager(this));
     recyclerViewCountries.setAdapter(countryAdapter);
 
-    JSONObject jsonTrailers = NetworkUtils.getJSONForVideos(movie.getId());
-    JSONObject jsonReviews = NetworkUtils.getJSONForReviews(movie.getId());
-    JSONObject jsonCountries = NetworkUtils.getJSONForCountries(movie.getId());
-    List<Trailer> trailers = JSONUtils.getTrailersFromJSON(jsonTrailers);
-    List<Review> reviews = JSONUtils.getReviewsFromJSON(jsonReviews);
-    List<Country> countries = JSONUtils.getCountriesFromJSON(jsonCountries);
-    trailerAdapter.setTrailers(trailers);
-    reviewAdapter.setReviews(reviews);
-    countryAdapter.setCountries(countries);
+    viewModel.getCountries().observe(this, prodCountries -> {
+      if (prodCountries != null) {
+        countryAdapter.setCountries(prodCountries);
+      }
+    });
 
-    JSONObject jsonCredits = NetworkUtils.getJSONForCredits(movie.getId());
-    textViewCast.setText(JSONUtils.getCastFromJSON(jsonCredits));
+    viewModel.getReviews().observe(this, movieReviews -> {
+      if (movieReviews != null) {
+        reviewAdapter.setReviews(movieReviews);
+      }
+    });
 
+    viewModel.getTrailers().observe(this, videoTrailers -> {
+      if (videoTrailers != null) {
+        trailerAdapter.setTrailers(videoTrailers);
+      }
+    });
+
+    viewModel.getCast().observe(this, casts -> {
+      if (casts != null){
+        StringBuilder builder = new StringBuilder();
+        int i = 0;
+        for (Cast cast : casts){
+          if (cast.getName() != null){
+            if (builder.length() > 0){
+              builder.append(", ");
+            }
+            builder.append(cast.getName());
+            i++;
+          }
+          if (i == 5){
+            break;
+          }
+        }
+        textViewCast.setText(builder.toString());
+      }
+    });
+
+    viewModel.getErrors().observe(this, throwable -> {
+      if (throwable != null) {
+        Toast.makeText(DetailActivity.this, "Error: " + throwable.getLocalizedMessage(),
+            Toast.LENGTH_SHORT).show();
+        Log.i("DETAIL_ERR", "Error: " + throwable.getLocalizedMessage());
+        viewModel.clearErrors();
+      }
+    });
+
+    viewModel.loadDetailData(movie.getId(), MainActivity.getLang());
     scrollViewInfo.smoothScrollTo(0, 0);
   }
 

@@ -1,6 +1,7 @@
 package kve.ru.bestmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,11 +19,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Locale;
 
 import kve.ru.bestmovies.adapters.MovieAdapter;
 import kve.ru.bestmovies.data.MainViewModel;
-import kve.ru.bestmovies.pojo.BestMovie;
+import kve.ru.bestmovies.pojo.movie.BestMovie;
 import kve.ru.bestmovies.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity  {
@@ -124,13 +126,16 @@ public class MainActivity extends AppCompatActivity  {
       }
     });
 
-    viewModel.getMovies().observe(this, bestMovies -> {
-      if (bestMovies != null && !bestMovies.isEmpty()) {
-        adapter.setMovies(bestMovies);
-        setPage(page + 1);
+    viewModel.getMovies().observe(this, new Observer<List<BestMovie>>() {
+      @Override
+      public void onChanged(List<BestMovie> bestMovies) {
+        if (bestMovies != null && !bestMovies.isEmpty()) {
+          adapter.setMovies(bestMovies);
+          setPage(page + 1);
+        }
+        setIsLoading(false);
+        progressBarLoading.setVisibility(View.INVISIBLE);
       }
-      setIsLoading(false);
-      progressBarLoading.setVisibility(View.INVISIBLE);
     });
 
     viewModel.getErrors().observe(this, throwable -> {

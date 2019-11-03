@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import kve.ru.bestmovies.pojo.BestMovie;
+import kve.ru.bestmovies.pojo.movie.BestMovie;
 
 @Database(entities = {BestMovie.class, FavouriteMovie.class}, version = 20, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {

@@ -34,7 +34,7 @@ public class JSONUtils {
   // Для видео
   private static final String KEY_KEY_OF_VIDEO ="key";
   private static final String KEY_NAME = "name";
-  private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
+  public static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
   // Вся информация о фильмах
   private static final String KEY_ID = "id";
@@ -80,10 +80,10 @@ public class JSONUtils {
       return result;
     }
     try {
-      JSONArray cust = jsonObject.getJSONArray(KEY_CAST);
+      JSONArray cast = jsonObject.getJSONArray(KEY_CAST);
       StringBuilder builder = new StringBuilder();
-      for (int i = 0; i < KEY_CAST.length(); i++) {
-        String name = cust.getJSONObject(i).getString(KEY_NAME);
+      for (int i = 0; i < cast.length(); i++) {
+        String name = cast.getJSONObject(i).getString(KEY_NAME);
         if (name != null && !name.isEmpty()) {
           if (builder.length() == 0) {
             builder.append(name);

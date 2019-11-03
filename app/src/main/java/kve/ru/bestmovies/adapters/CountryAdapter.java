@@ -8,16 +8,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kve.ru.bestmovies.R;
-import kve.ru.bestmovies.data.Country;
+import kve.ru.bestmovies.pojo.countries.ProductionCountry;
 
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryViewHolder> {
 
-  private List<Country> countries;
+  private List<ProductionCountry> countries = new ArrayList<>();
 
-  public void setCountries(List<Country> countries) {
+  public void setCountries(List<ProductionCountry> countries) {
     this.countries = countries;
     notifyDataSetChanged();
   }
@@ -32,7 +33,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
 
   @Override
   public void onBindViewHolder(@NonNull CountryViewHolder holder, int position) {
-    Country country = countries.get(position);
+    ProductionCountry country = countries.get(position);
     holder.textViewCountry.setText(country.getName());
   }
 

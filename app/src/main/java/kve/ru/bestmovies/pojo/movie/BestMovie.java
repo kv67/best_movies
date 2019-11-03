@@ -1,4 +1,4 @@
-package kve.ru.bestmovies.pojo;
+package kve.ru.bestmovies.pojo.movie;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

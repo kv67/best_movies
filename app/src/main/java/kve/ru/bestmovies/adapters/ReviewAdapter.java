@@ -9,15 +9,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kve.ru.bestmovies.R;
 import kve.ru.bestmovies.data.Review;
+import kve.ru.bestmovies.pojo.review.MovieReview;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
-  private List<Review> reviews;
-  public void setReviews(List<Review> reviews) {
+  private List<MovieReview> reviews = new ArrayList<>();
+  public void setReviews(List<MovieReview> reviews) {
     this.reviews = reviews;
     notifyDataSetChanged();
   }
@@ -32,7 +34,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
   @Override
   public void onBindViewHolder(@NonNull ReviewAdapter.ReviewViewHolder holder, int position) {
-    Review review = reviews.get(position);
+    MovieReview review = reviews.get(position);
     holder.textViewAuthor.setText(review.getAuthor());
     holder.textViewContent.setText(review.getContent());
   }

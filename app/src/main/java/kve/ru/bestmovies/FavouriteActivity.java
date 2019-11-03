@@ -17,7 +17,7 @@ import java.util.List;
 
 import kve.ru.bestmovies.adapters.MovieAdapter;
 import kve.ru.bestmovies.data.MainViewModel;
-import kve.ru.bestmovies.pojo.BestMovie;
+import kve.ru.bestmovies.pojo.movie.BestMovie;
 
 public class FavouriteActivity extends AppCompatActivity {
 

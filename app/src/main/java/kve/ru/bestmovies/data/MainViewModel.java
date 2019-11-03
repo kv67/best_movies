@@ -19,7 +19,11 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import kve.ru.bestmovies.api.ApiFactory;
 import kve.ru.bestmovies.api.ApiService;
-import kve.ru.bestmovies.pojo.BestMovie;
+import kve.ru.bestmovies.pojo.cast.Cast;
+import kve.ru.bestmovies.pojo.countries.ProductionCountry;
+import kve.ru.bestmovies.pojo.movie.BestMovie;
+import kve.ru.bestmovies.pojo.review.MovieReview;
+import kve.ru.bestmovies.pojo.video.VideoTrailer;
 import kve.ru.bestmovies.utils.NetworkUtils;
 
 public class MainViewModel extends AndroidViewModel {
@@ -28,8 +32,13 @@ public class MainViewModel extends AndroidViewModel {
   private static MovieDatabase database;
   private LiveData<List<BestMovie>> movies;
   private LiveData<List<FavouriteMovie>> favouriteMovies;
+  private MutableLiveData<List<VideoTrailer>> trailers =  new MutableLiveData<>();
+  private MutableLiveData<List<Cast>> cast =  new MutableLiveData<>();
+  private MutableLiveData<List<MovieReview>> reviews =  new MutableLiveData<>();
+  private MutableLiveData<List<ProductionCountry>> countries =  new MutableLiveData<>();
   private MutableLiveData<Throwable> errors =  new MutableLiveData<>();
-  private CompositeDisposable compositeDisposable;
+  private CompositeDisposable compositeDisposable = new CompositeDisposable();
+  private static ApiService apiService = ApiFactory.getInstance().getApiService();
 
   private static void setDataBase(MovieDatabase database){
     MainViewModel.database = database;
@@ -46,6 +55,56 @@ public class MainViewModel extends AndroidViewModel {
     return movies;
   }
 
+  public MutableLiveData<List<Cast>> getCast() {
+    return cast;
+  }
+
+  public MutableLiveData<List<VideoTrailer>> getTrailers() {
+    return trailers;
+  }
+
+  public MutableLiveData<List<MovieReview>> getReviews() {
+    return reviews;
+  }
+
+  public MutableLiveData<List<ProductionCountry>> getCountries() {
+    return countries;
+  }
+
+  public void loadDetailData(int movieId, String lang){
+    compositeDisposable.add(
+        apiService.getReviews(movieId, NetworkUtils.API_KEY, lang)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(reviewResponse -> reviews.setValue(reviewResponse.getReviews()),
+                throwable -> errors.setValue(throwable))
+    );
+
+    compositeDisposable.add(
+        apiService.getCountries(movieId, NetworkUtils.API_KEY, lang)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(countriesResponse -> countries.setValue(countriesResponse.getProductionCountries()),
+                throwable -> errors.setValue(throwable))
+    );
+
+    compositeDisposable.add(
+        apiService.getVideo(movieId, NetworkUtils.API_KEY, lang)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(trailerResponse -> trailers.setValue(trailerResponse.getTrailers()),
+                throwable -> errors.setValue(throwable))
+    );
+
+    compositeDisposable.add(
+        apiService.getCast(movieId, NetworkUtils.API_KEY)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(castResponse -> cast.setValue(castResponse.getCast()),
+                throwable -> errors.setValue(throwable))
+    );
+  }
+
   public LiveData<List<FavouriteMovie>> getFavouriteMovies() {
     return favouriteMovies;
   }
@@ -59,9 +118,6 @@ public class MainViewModel extends AndroidViewModel {
   }
 
   public void loadData(String lang, int sortMethod, int page){
-    compositeDisposable = new CompositeDisposable();
-    ApiFactory apiFactory = ApiFactory.getInstance();
-    ApiService apiService = apiFactory.getApiService();
     String methodOfSort;
     if (sortMethod == NetworkUtils.POPULARITY){
       methodOfSort = NetworkUtils.SORT_BY_POPULARITY;
@@ -114,14 +170,6 @@ public class MainViewModel extends AndroidViewModel {
     return null;
   }
 
-  public void insertMovie(BestMovie movie){
-    new InsertMovieTask().execute(movie);
-  }
-
-  public void deleteMovie(BestMovie movie){
-    new DeleteMovieTask().execute(movie);
-  }
-
   public void insertFavouriteMovie(FavouriteMovie movie){
     new InsertFavouriteMovieTask().execute(movie);
   }
@@ -165,26 +213,6 @@ public class MainViewModel extends AndroidViewModel {
     protected FavouriteMovie doInBackground(Integer... integers) {
       if (integers != null && integers.length > 0){
         return database.movieDao().getFavouriteMovieById(integers[0]);
-      }
-      return null;
-    }
-  }
-
-  private static class InsertMovieTask extends AsyncTask<BestMovie, Void, Void>{
-    @Override
-    protected Void doInBackground(BestMovie... movies) {
-      if (movies != null && movies.length > 0){
-        database.movieDao().insertMovie(movies[0]);
-      }
-      return null;
-    }
-  }
-
-  private static class DeleteMovieTask extends AsyncTask<BestMovie, Void, Void>{
-    @Override
-    protected Void doInBackground(BestMovie... movies) {
-      if (movies != null && movies.length > 0){
-        database.movieDao().deleteMovie(movies[0]);
       }
       return null;
     }

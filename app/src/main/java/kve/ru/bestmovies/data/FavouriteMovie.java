@@ -3,7 +3,7 @@ package kve.ru.bestmovies.data;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
-import kve.ru.bestmovies.pojo.BestMovie;
+import kve.ru.bestmovies.pojo.movie.BestMovie;
 
 @Entity(tableName = "favourite_movies")
 public class FavouriteMovie extends BestMovie {

@@ -9,7 +9,7 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import kve.ru.bestmovies.pojo.BestMovie;
+import kve.ru.bestmovies.pojo.movie.BestMovie;
 
 @Dao
 public interface MovieDao {
